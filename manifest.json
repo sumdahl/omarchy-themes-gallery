@@ -7,10 +7,19 @@
   "license": "MIT",
   "description": "Gallery for bjarneo.github.io/omarchy-themes — thousands of wallpapers × 5 variants. Search, filter, preview palettes and apply any variant as an Omarchy theme in one click.",
   "kinds": [
-    "panel"
+    "panel",
+    "bar-widget"
   ],
+  "keepLoaded": true,
   "entryPoints": {
-    "panel": "Panel.qml"
+    "panel": "Panel.qml",
+    "barWidget": "BarWidget.qml"
   },
-  "keepLoaded": true
+  "barWidget": {
+    "displayName": "Themes Gallery",
+    "description": "Opens the Themes Gallery app",
+    "category": "Themes",
+    "allowMultiple": false,
+    "defaultSection": "center"
+  }
 }

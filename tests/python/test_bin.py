@@ -925,9 +925,16 @@ class TestDesktopEntry(unittest.TestCase):
     def test_manifest_is_a_kept_loaded_panel(self):
         # keepLoaded keeps the AUTO timer alive while the window is closed.
         m = json.loads((REPO / "manifest.json").read_text())
-        self.assertEqual(m["kinds"], ["panel"])
+        self.assertEqual(m["kinds"], ["panel", "bar-widget"])
         self.assertTrue(m["keepLoaded"])
-        self.assertTrue((REPO / m["entryPoints"]["panel"]).exists())
+        for entry in m["entryPoints"].values():
+            self.assertTrue((REPO / entry).exists())
+
+    def test_bar_button_opens_the_app_through_the_host(self):
+        # Routing through shell.toggle keeps the bar button and the launcher
+        # entry on one open/close state.
+        text = (REPO / "BarWidget.qml").read_text()
+        self.assertIn('bar.shell.toggle(root.moduleName, "{}")', text)
 
 
 if __name__ == "__main__":

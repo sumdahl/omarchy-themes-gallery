@@ -47,7 +47,11 @@ The plugin is a kept-loaded panel, so the shell restart is needed once to mount 
 omarchy-shell shell toggle gotar.omarchy-themes '{}'
 ```
 
-Upgrading from 1.0.x (bar widget): the old bar entry no longer renders and can be removed from your bar layout.
+Optionally add the 🖼️ bar button too (left-click opens the app, right-click opens Aether). Upgrading from 1.0.x keeps an existing bar button working:
+
+```sh
+omarchy bar put gotar.omarchy-themes --after omarchy.weather
+```
 
 ## Requirements
 
@@ -93,7 +97,8 @@ omarchy-shell shell rescanPlugins
 
 | Mouse / Key | Action |
 |---|---|
-| **Super+Space → Themes Gallery** | Open / close gallery |
+| **Super+Space → Themes Gallery** or **left click 🖼️** | Open / close gallery |
+| **Right click 🖼️** | Open **Aether** (`aether`) |
 | Click card / `Enter` | Open detail |
 | `← →` / `↑ ↓` | Browse wallpapers / cycle variant |
 | `Enter` in detail | Apply selected variant |
@@ -122,7 +127,8 @@ No extra network beyond index + media.
 ## Layout
 
 ```
-manifest.json          id gotar.omarchy-themes, kind panel, keepLoaded
+manifest.json          id gotar.omarchy-themes, kinds panel + bar-widget, keepLoaded
+BarWidget.qml          optional 🖼️ bar button: left = toggle app via shell.toggle, right = Aether
 Panel.qml              FloatingWindow app: header, search + Mode/Auto switches, filter rail, responsive GridView, detail, IpcHandler, auto Timer
 icon.svg / icon.png    launcher icon
 Model.js               .pragma library — bucketRes, prep, apply, variant helpers, titleCase
@@ -152,7 +158,7 @@ Validates with `omarchy plugin validate` and `qmllint` (local — GitHub CI runs
 ```sh
 omarchy plugin validate ./
 python3 -m py_compile bin/*.py
-qmllint -I /usr/share/omarchy/shell -I /usr/lib/qt6/qml Panel.qml
+qmllint -I /usr/share/omarchy/shell -I /usr/lib/qt6/qml Panel.qml BarWidget.qml
 omarchy restart shell              # keepLoaded panels don't hot-reload
 grim /tmp/preview.png               # after summon
 ```
