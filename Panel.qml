@@ -440,6 +440,13 @@ Item {
     function toggle(): string { root.toggle(); return "ok" }
   }
 
+  // The host has no uninstall hook, but disable (and `omarchy plugin remove`,
+  // which disables first) destroys this panel. Drop our launcher entry then;
+  // onCompleted puts it back on the next load. Inline sh, because remove
+  // deletes the plugin dir right after disabling, so bin/ may already be gone.
+  readonly property string desktopEntryCleanup: 'f="${XDG_DATA_HOME:-$HOME/.local/share}/applications/gotar.omarchy-themes.desktop"; [ -L "$f" ] || ! grep -qx "X-Omarchy-Plugin=gotar.omarchy-themes" "$f" 2>/dev/null || rm -f "$f"'
+  Component.onDestruction: Quickshell.execDetached(["sh", "-c", root.desktopEntryCleanup])
+
   Component.onCompleted: {
     desktopEntryProc.running = true
     if (opened) {

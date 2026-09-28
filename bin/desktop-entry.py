@@ -2,7 +2,9 @@
 """Install the Apps-launcher entry for gotar.omarchy-themes.
 
 Makes the gallery searchable from Super+Space like any app. Written once;
-an existing file is the user's, except that an Icon= we wrote earlier is upgraded.
+an existing file is the user's, except that one with an Icon= we wrote is
+upgraded and marked. Panel.qml deletes marked files when the plugin unloads
+(disable / `omarchy plugin remove`), since the host has no uninstall hook.
 """
 import os
 import pathlib
@@ -11,6 +13,8 @@ import re
 ICON = str(pathlib.Path(__file__).resolve().parent.parent / "icon.png")
 # Icons earlier versions wrote; only these are upgraded in place.
 OLD_ICONS = {"preferences-desktop-wallpaper"}
+# Ownership marker; Panel.qml's cleanup only removes files carrying it.
+MARKER = "X-Omarchy-Plugin=gotar.omarchy-themes"
 
 ENTRY = """[Desktop Entry]
 Type=Application
@@ -24,6 +28,7 @@ Terminal=false
 StartupNotify=false
 Categories=Settings;DesktopSettings;
 Keywords=theme;omarchy;wallpaper;gallery;colors;
+{marker}
 """
 # StartupNotify=false: Exec only toggles a window in the running shell.
 
@@ -36,11 +41,16 @@ def main():
     if dst.exists():
         text = dst.read_text()
         m = re.search(r"^Icon=(.*)$", text, re.M)
-        if not m or m.group(1) not in OLD_ICONS:
+        if not m or m.group(1) not in OLD_ICONS | {ICON}:
             return 0  # the user's own entry: leave it alone
-        text = text[:m.start(1)] + ICON + text[m.end(1):]
+        new = text[:m.start(1)] + ICON + text[m.end(1):]
+        if not re.search("^" + re.escape(MARKER) + "$", new, re.M):
+            new = new.rstrip("\n") + "\n" + MARKER + "\n"
+        if new == text:
+            return 0
+        text = new
     else:
-        text = ENTRY.replace("{icon}", ICON)
+        text = ENTRY.replace("{icon}", ICON).replace("{marker}", MARKER)
     dst.parent.mkdir(parents=True, exist_ok=True)
     tmp = dst.with_suffix(".tmp")
     tmp.write_text(text)

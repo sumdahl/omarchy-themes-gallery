@@ -41,7 +41,7 @@ omarchy restart shell
 
 Alternative — manual clone to `~/.config/omarchy/plugins/gotar.omarchy-themes/`, then `omarchy restart shell`.
 
-The plugin is a kept-loaded panel, so the shell restart is needed once to mount it. On first load it adds `~/.local/share/applications/gotar.omarchy-themes.desktop` (never overwriting your own copy), which puts **Themes Gallery** in the app launcher. It can also be toggled directly:
+The plugin is a kept-loaded panel, so the shell restart is needed once to mount it. On first load it adds `~/.local/share/applications/gotar.omarchy-themes.desktop` (never overwriting your own copy) and removes it again when the plugin is disabled or removed, which puts **Themes Gallery** in the app launcher. It can also be toggled directly:
 
 ```sh
 omarchy-shell shell toggle gotar.omarchy-themes '{}'
@@ -75,7 +75,7 @@ rm -rf ~/.config/omarchy/plugins/gotar.omarchy-themes
 omarchy-shell shell rescanPlugins
 ```
 
-Delete `~/.local/share/applications/gotar.omarchy-themes.desktop` to drop the launcher entry.
+The launcher entry (`~/.local/share/applications/gotar.omarchy-themes.desktop`) is removed automatically when the plugin is disabled or removed while the shell is running. If you deleted the directory with the shell stopped, delete that file by hand. A copy you edited yourself (without the `X-Omarchy-Plugin=gotar.omarchy-themes` line) is never touched.
 
 The applied themes (`~/.config/omarchy/themes/<slug>/`) are regular Omarchy user themes and stay installed — remove them with `omarchy theme remove <slug>` if you no longer want them. The wallpaper index cache in `~/.cache/gotar.omarchy-themes/` can be deleted (it is re-fetched on next open).
 
@@ -135,7 +135,7 @@ Model.js               .pragma library — bucketRes, prep, apply, variant helpe
 bin/fetch-manifest.py  wallpapers.js → slim manifest → cache
 bin/apply-theme.py     colors + background (with fallback med→p) → observable `omarchy theme set` + current-theme confirmation
 bin/set-wallpaper.py   wallpaper only → cache → omarchy-theme-bg-set
-bin/desktop-entry.py   installs the app-launcher entry once
+bin/desktop-entry.py   installs the app-launcher entry (Panel.qml removes it on unload)
 ```
 
 The window opens at `1180×800` (`Style.space`) and is resizable (min `760×540`): header → search + Mode/Auto → filter chips → rail + grid → status. The grid's right edge is anchored to the window (no width arithmetic), so added controls can never push thumbnails outside. All colors and fonts come from the shell's `Color`/`Style`, so the app follows `omarchy theme set` and `omarchy font set`.

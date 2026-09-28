@@ -922,6 +922,43 @@ class TestDesktopEntry(unittest.TestCase):
             self.run_in(data)
             self.assertEqual(dst.read_text(), "[Desktop Entry]\nIcon=my-custom\n")
 
+    def test_marks_ours_and_upgrades_unmarked_entry_we_wrote(self):
+        mod = load_module("desktop-entry")
+        with tempfile.TemporaryDirectory() as data:
+            dst = self.run_in(data)
+            self.assertIn(mod.MARKER + "\n", dst.read_text())
+            # entries written before the marker existed get it on next load
+            dst.write_text("[Desktop Entry]\nIcon=" + mod.ICON + "\n")
+            self.run_in(data)
+            self.assertIn(mod.MARKER, dst.read_text())
+
+    def cleanup(self, data):
+        # the exact sh Panel.qml runs on unload (disable / plugin remove)
+        qml = (REPO / "Panel.qml").read_text()
+        cmd = re.search(r"desktopEntryCleanup: '(.*)'$", qml, re.M).group(1)
+        env = dict(os.environ, XDG_DATA_HOME=data)
+        subprocess.run(["sh", "-c", cmd], env=env, check=True)
+
+    def test_unload_cleanup_removes_only_our_entry(self):
+        with tempfile.TemporaryDirectory() as data:
+            dst = self.run_in(data)
+            self.cleanup(data)
+            self.assertFalse(dst.exists())
+            self.cleanup(data)  # missing file is fine
+            dst.write_text("[Desktop Entry]\nIcon=my-custom\n")
+            self.cleanup(data)
+            self.assertTrue(dst.exists())
+
+    def test_unload_cleanup_keeps_user_symlink(self):
+        with tempfile.TemporaryDirectory() as data:
+            target = pathlib.Path(data) / "mine.desktop"
+            target.write_text("X-Omarchy-Plugin=gotar.omarchy-themes\n")
+            dst = pathlib.Path(data) / "applications" / "gotar.omarchy-themes.desktop"
+            dst.parent.mkdir(parents=True)
+            dst.symlink_to(target)
+            self.cleanup(data)
+            self.assertTrue(dst.is_symlink())
+
     def test_manifest_is_a_kept_loaded_panel(self):
         # keepLoaded keeps the AUTO timer alive while the window is closed.
         m = json.loads((REPO / "manifest.json").read_text())
