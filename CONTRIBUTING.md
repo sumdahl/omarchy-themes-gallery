@@ -15,7 +15,7 @@
 - No `/home/*` hardcodes — use `Qt.resolvedUrl`, `~`, `expanduser`, `StandardPaths`.
 - Keep `manifest.json` valid: `omarchy plugin validate ./` must pass.
 - Add preview to `preview.png` (1280px, <1 MB) and reference in README.
-- Bar icon stays `\\uF03E` (`JetBrainsMono Nerd Font`), README uses `🖼️` + image.
+- App icon is `icon.svg`; regenerate `icon.png` with `rsvg-convert -w 512 -h 512 icon.svg -o icon.png`.
 
 ## Adding features
 - Put auto logic in `Panel.qml` root `Timer` (even when closed, `Loader active:true` keeps it alive).

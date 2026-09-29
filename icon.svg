@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3a2d6e"/>
+      <stop offset="0.55" stop-color="#231c46"/>
+      <stop offset="1" stop-color="#15122b"/>
+    </linearGradient>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffb37a"/>
+      <stop offset="0.55" stop-color="#f06a8c"/>
+      <stop offset="1" stop-color="#8a4fd6"/>
+    </linearGradient>
+    <linearGradient id="hill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4b3aa8"/>
+      <stop offset="1" stop-color="#2a2170"/>
+    </linearGradient>
+    <linearGradient id="back1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5ec3d0"/>
+      <stop offset="1" stop-color="#3b6fd6"/>
+    </linearGradient>
+    <linearGradient id="back2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8fd08a"/>
+      <stop offset="1" stop-color="#2f8f7a"/>
+    </linearGradient>
+    <clipPath id="front"><rect x="136" y="150" width="240" height="176" rx="26"/></clipPath>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <!-- tile -->
+  <rect x="16" y="16" width="480" height="480" rx="108" fill="url(#tile)"/>
+  <rect x="16.5" y="16.5" width="479" height="479" rx="107.5" fill="none" stroke="#ffffff" stroke-opacity="0.08"/>
+
+  <g transform="translate(256 262) scale(1.3) translate(-256 -275)">
+  <!-- fanned wallpapers behind -->
+  <g filter="url(#shadow)">
+    <rect x="136" y="150" width="240" height="176" rx="26" fill="url(#back1)" transform="rotate(-14 256 238)"/>
+    <rect x="136" y="150" width="240" height="176" rx="26" fill="url(#back2)" transform="rotate(9 256 238)"/>
+  </g>
+
+  <!-- front wallpaper: sunset landscape -->
+  <g filter="url(#shadow)">
+    <g clip-path="url(#front)">
+      <rect x="136" y="150" width="240" height="176" fill="url(#sky)"/>
+      <circle cx="310" cy="210" r="28" fill="#ffe9b0"/>
+      <path d="M136 290 C 186 236, 220 238, 262 276 C 296 250, 336 240, 376 268 L376 326 L136 326 Z" fill="url(#hill)"/>
+    </g>
+    <rect x="136.5" y="150.5" width="239" height="175" rx="25.5" fill="none" stroke="#ffffff" stroke-opacity="0.35"/>
+  </g>
+
+  <!-- palette strip -->
+  <g filter="url(#shadow)">
+    <rect x="156" y="366" width="200" height="34" rx="17" fill="#15122b"/>
+    <circle cx="183" cy="383" r="10" fill="#e74c5b"/>
+    <circle cx="219" cy="383" r="10" fill="#f5994f"/>
+    <circle cx="256" cy="383" r="10" fill="#f0d869"/>
+    <circle cx="293" cy="383" r="10" fill="#5ec3d0"/>
+    <circle cx="329" cy="383" r="10" fill="#a87cd9"/>
+  </g>
+  </g>
+</svg>

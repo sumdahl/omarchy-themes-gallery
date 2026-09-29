@@ -476,6 +476,13 @@ class TestPanelSource(unittest.TestCase):
         self.assertIn("openDetailAt(root.cursorIdx)", text)
         self.assertNotIn("openDetailAt(0)", text)
 
+    def test_activation_timer_called_by_id(self):
+        # ids are not properties of root: root.activateCheckTimer is undefined,
+        # so confirmation threw and the UI stuck on "activating…".
+        text = (REPO / "Panel.qml").read_text()
+        self.assertNotIn("root.activateCheckTimer", text)
+        self.assertIn("activateCheckTimer.start()", text)
+
     def test_fallback_uses_fullres(self):
         text = (REPO / "Panel.qml").read_text()
         self.assertIn('fallbackP = e ? (e.p || \"\")', text)
@@ -873,6 +880,61 @@ class TestCacheLimit(unittest.TestCase):
             self.assertEqual(removed, 0)
             self.assertTrue(os.path.exists(requested))
             self.assertTrue(os.path.exists(current))
+
+
+class TestDesktopEntry(unittest.TestCase):
+    def run_in(self, data):
+        mod = load_module("desktop-entry")
+        with mock.patch.dict(os.environ, {"XDG_DATA_HOME": data}):
+            self.assertEqual(mod.main(), 0)
+        return pathlib.Path(data) / "applications" / "gotar.omarchy-themes.desktop"
+
+    def test_installs_launcher_that_toggles_the_panel(self):
+        with tempfile.TemporaryDirectory() as data:
+            text = self.run_in(data).read_text()
+            self.assertIn("Exec=omarchy-shell shell toggle gotar.omarchy-themes '{}'", text)
+            self.assertIn("StartupNotify=false", text)
+
+    def test_never_overwrites_user_copy(self):
+        with tempfile.TemporaryDirectory() as data:
+            dst = pathlib.Path(data) / "applications" / "gotar.omarchy-themes.desktop"
+            dst.parent.mkdir(parents=True)
+            dst.write_text("mine")
+            self.run_in(data)
+            self.assertEqual(dst.read_text(), "mine")
+
+    def test_icon_ships_and_is_referenced(self):
+        with tempfile.TemporaryDirectory() as data:
+            text = self.run_in(data).read_text()
+            self.assertIn("Icon=" + str(REPO.resolve() / "icon.png"), text)
+            self.assertTrue((REPO / "icon.png").exists())
+
+    def test_upgrades_only_our_old_default_icon(self):
+        with tempfile.TemporaryDirectory() as data:
+            dst = pathlib.Path(data) / "applications" / "gotar.omarchy-themes.desktop"
+            dst.parent.mkdir(parents=True)
+            dst.write_text("[Desktop Entry]\nName=Mine\nIcon=preferences-desktop-wallpaper\n")
+            self.run_in(data)
+            text = dst.read_text()
+            self.assertIn("Name=Mine", text)
+            self.assertIn("icon.png", text)
+            dst.write_text("[Desktop Entry]\nIcon=my-custom\n")
+            self.run_in(data)
+            self.assertEqual(dst.read_text(), "[Desktop Entry]\nIcon=my-custom\n")
+
+    def test_manifest_is_a_kept_loaded_panel(self):
+        # keepLoaded keeps the AUTO timer alive while the window is closed.
+        m = json.loads((REPO / "manifest.json").read_text())
+        self.assertEqual(m["kinds"], ["panel", "bar-widget"])
+        self.assertTrue(m["keepLoaded"])
+        for entry in m["entryPoints"].values():
+            self.assertTrue((REPO / entry).exists())
+
+    def test_bar_button_opens_the_app_through_the_host(self):
+        # Routing through shell.toggle keeps the bar button and the launcher
+        # entry on one open/close state.
+        text = (REPO / "BarWidget.qml").read_text()
+        self.assertIn('bar.shell.toggle(root.moduleName, "{}")', text)
 
 
 if __name__ == "__main__":
