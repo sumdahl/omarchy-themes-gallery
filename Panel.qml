@@ -429,12 +429,12 @@ Item {
   }
   function toggle() { opened ? requestClose() : open() }
   function requestClose() {
-    if (shell && typeof shell.hide === "function") shell.hide("gotar.omarchy-themes")
+    if (shell && typeof shell.hide === "function") shell.hide("sumiran.theme-gallery")
     else close()
   }
 
   IpcHandler {
-    target: "gotar.omarchy-themes"
+    target: "sumiran.theme-gallery"
     function open(): string { root.open(); return "ok" }
     function close(): string { root.requestClose(); return "ok" }
     function toggle(): string { root.toggle(); return "ok" }

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Fetch + slim the omarchy-themes index for the gotar.omarchy-themes shell plugin.
+"""Fetch + slim the omarchy-themes index for the sumiran.theme-gallery shell plugin.
 
 Source: https://bjarneo.github.io/omarchy-themes/wallpapers.js
 (~35 MB, `window.WALLPAPERS_BASE_URL = "..."; window.WALLPAPERS = {...}`).
 
-Writes a slimmed manifest to ~/.cache/gotar.omarchy-themes/manifest.json
+Writes a slimmed manifest to ~/.cache/sumiran.theme-gallery/manifest.json
 (only the fields the browser UI needs) and prints the slim manifest JSON
 to stdout. Cached for 24h; use --force to re-fetch.
 
@@ -22,7 +22,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import _sec
 
 SOURCE = "https://bjarneo.github.io/omarchy-themes/wallpapers.js"
-CACHE_DIR = os.path.expanduser("~/.cache/gotar.omarchy-themes")
+CACHE_DIR = os.path.expanduser("~/.cache/sumiran.theme-gallery")
 MANIFEST = os.path.join(CACHE_DIR, "manifest.json")
 TTL = 24 * 3600
 ANSI = ["color%d" % i for i in range(16)]

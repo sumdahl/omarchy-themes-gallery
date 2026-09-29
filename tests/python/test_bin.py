@@ -718,7 +718,7 @@ class TestSetWallpaperE2E(unittest.TestCase):
                     buf = io.StringIO()
                     with contextlib.redirect_stdout(buf):
                         fem.main()
-                    dest = os.path.join(home, ".cache/gotar.omarchy-themes/wallpapers", *rel.split("/"))
+                    dest = os.path.join(home, ".cache/sumiran.theme-gallery/wallpapers", *rel.split("/"))
                     linked = os.path.islink(link) and os.path.realpath(link) == os.path.realpath(dest)
                     return buf.getvalue(), linked
             finally:
@@ -751,7 +751,7 @@ class TestSetWallpaperE2E(unittest.TestCase):
     def test_rejects_symlinked_cache_component(self):
         fem = load_module("set-wallpaper")
         with tempfile.TemporaryDirectory() as home:
-            cache_root = os.path.join(home, ".cache/gotar.omarchy-themes/wallpapers")
+            cache_root = os.path.join(home, ".cache/sumiran.theme-gallery/wallpapers")
             outside = os.path.join(home, "outside")
             os.makedirs(cache_root, exist_ok=True)
             os.makedirs(outside)
@@ -772,7 +772,7 @@ class TestSetWallpaperE2E(unittest.TestCase):
     def test_rejects_cache_component_swapped_during_download(self):
         fem = load_module("set-wallpaper")
         with tempfile.TemporaryDirectory() as home:
-            cache_root = os.path.join(home, ".cache/gotar.omarchy-themes/wallpapers")
+            cache_root = os.path.join(home, ".cache/sumiran.theme-gallery/wallpapers")
             outside = os.path.join(home, "outside")
             dark = os.path.join(cache_root, "dark")
             os.makedirs(dark, exist_ok=True)
@@ -887,17 +887,17 @@ class TestDesktopEntry(unittest.TestCase):
         mod = load_module("desktop-entry")
         with mock.patch.dict(os.environ, {"XDG_DATA_HOME": data}):
             self.assertEqual(mod.main(), 0)
-        return pathlib.Path(data) / "applications" / "gotar.omarchy-themes.desktop"
+        return pathlib.Path(data) / "applications" / "sumiran.theme-gallery.desktop"
 
     def test_installs_launcher_that_toggles_the_panel(self):
         with tempfile.TemporaryDirectory() as data:
             text = self.run_in(data).read_text()
-            self.assertIn("Exec=omarchy-shell shell toggle gotar.omarchy-themes '{}'", text)
+            self.assertIn("Exec=omarchy-shell shell toggle sumiran.theme-gallery '{}'", text)
             self.assertIn("StartupNotify=false", text)
 
     def test_never_overwrites_user_copy(self):
         with tempfile.TemporaryDirectory() as data:
-            dst = pathlib.Path(data) / "applications" / "gotar.omarchy-themes.desktop"
+            dst = pathlib.Path(data) / "applications" / "sumiran.theme-gallery.desktop"
             dst.parent.mkdir(parents=True)
             dst.write_text("mine")
             self.run_in(data)
@@ -911,7 +911,7 @@ class TestDesktopEntry(unittest.TestCase):
 
     def test_upgrades_only_our_old_default_icon(self):
         with tempfile.TemporaryDirectory() as data:
-            dst = pathlib.Path(data) / "applications" / "gotar.omarchy-themes.desktop"
+            dst = pathlib.Path(data) / "applications" / "sumiran.theme-gallery.desktop"
             dst.parent.mkdir(parents=True)
             dst.write_text("[Desktop Entry]\nName=Mine\nIcon=preferences-desktop-wallpaper\n")
             self.run_in(data)

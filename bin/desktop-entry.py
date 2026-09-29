@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install the Apps-launcher entry for gotar.omarchy-themes.
+"""Install the Apps-launcher entry for sumiran.theme-gallery.
 
 Makes the gallery searchable from Super+Space like any app. Written once;
 an existing file is the user's, except that an Icon= we wrote earlier is upgraded.
@@ -17,7 +17,7 @@ Type=Application
 Name=Themes Gallery
 GenericName=Theme gallery
 Comment=Browse thousands of wallpapers x 5 variants and apply any as an Omarchy theme
-Exec=omarchy-shell shell toggle gotar.omarchy-themes '{}'
+Exec=omarchy-shell shell toggle sumiran.theme-gallery '{}'
 TryExec=omarchy-shell
 Icon={icon}
 Terminal=false
@@ -30,7 +30,7 @@ Keywords=theme;omarchy;wallpaper;gallery;colors;
 
 def main():
     data = os.environ.get("XDG_DATA_HOME") or os.path.expanduser("~/.local/share")
-    dst = pathlib.Path(data) / "applications" / "gotar.omarchy-themes.desktop"
+    dst = pathlib.Path(data) / "applications" / "sumiran.theme-gallery.desktop"
     if dst.is_symlink():
         return 0
     if dst.exists():

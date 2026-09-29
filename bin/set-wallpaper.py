@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Set wallpaper only (no theme) for gotar.omarchy-themes.
+"""Set wallpaper only (no theme) for sumiran.theme-gallery.
 
 Downloads the wallpaper image and calls `omarchy-theme-bg-set` to set it
 as the current background without changing the theme colors.
@@ -7,7 +7,7 @@ as the current background without changing the theme colors.
 Usage: set-wallpaper.py <base-url> <wallpaper-rel>
 Example: set-wallpaper.py https://wallpapers.hel1.your-objectstorage.com dark/green/6000x4000_...jpg
 
-Downloads to ~/.cache/gotar.omarchy-themes/wallpapers/<wallpaper-rel> (path
+Downloads to ~/.cache/sumiran.theme-gallery/wallpapers/<wallpaper-rel> (path
 mirrored, so dark/a.jpg and light/a.jpg cannot collide) and
 then runs `omarchy-theme-bg-set <path>`. The cache avoids re-downloading.
 
@@ -174,7 +174,7 @@ def main():
     if not _sec.safe_relpath(rel):
         fail("unsafe wallpaper path: %r" % (rel,))
     url = base + "/" + rel
-    cache_dir = os.path.expanduser("~/.cache/gotar.omarchy-themes/wallpapers")
+    cache_dir = os.path.expanduser("~/.cache/sumiran.theme-gallery/wallpapers")
     # Mirror the relative path tree: safe_relpath already guarantees no '..'
     # components, and keying by basename alone would let dark/a.jpg and
     # light/a.jpg collide. Refuse cache-directory symlinks before any write.

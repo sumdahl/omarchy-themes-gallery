@@ -1,8 +1,4 @@
-# Themes Gallery — gotar.omarchy-themes
-
-[![Available on Omarchy Plugins](https://img.shields.io/badge/Omarchy_Plugins-gotar.omarchy--themes-8A2BE2?style=flat&labelColor=1a1a1a)](https://omarchyplugins.com/plugin.html?id=gotar.omarchy-themes)
-
-> **Install from the marketplace:** [omarchyplugins.com/plugin.html?id=gotar.omarchy-themes](https://omarchyplugins.com/plugin.html?id=gotar.omarchy-themes) — open the page and copy the install command.
+# Themes Gallery — sumiran.theme-gallery
 
 Desktop app for **[bjarneo/omarchy-themes](https://bjarneo.github.io/omarchy-themes/)** — 3,000+ wallpapers, each with five theme variants (Palette · Warm · Cool · Material · Aether).
 
@@ -19,38 +15,31 @@ Browse, search and preview like on the website, then apply any variant as a nati
 
 ## Install
 
-### From Omarchy Plugins marketplace (recommended for discovery)
-
-Browse and install from the marketplace page — it shows the verified install command, version and preview:
-
-**[https://omarchyplugins.com/plugin.html?id=gotar.omarchy-themes](https://omarchyplugins.com/plugin.html?id=gotar.omarchy-themes)**
-
-Click **Copy** on the page, then run the copied command (same as below):
-
-```sh
-omarchy plugin add https://github.com/gotar/omarchy-themes.git --enable
-omarchy restart shell
-```
-
 ### Direct install (Git URL)
 
+Installs into `~/.config/omarchy/plugins/sumiran.theme-gallery/`:
+
 ```sh
-omarchy plugin add https://github.com/gotar/omarchy-themes.git --enable
+omarchy plugin add https://github.com/sumdahl/omarchy-themes-gallery.git --enable
 omarchy restart shell
 ```
 
-Alternative — manual clone to `~/.config/omarchy/plugins/gotar.omarchy-themes/`, then `omarchy restart shell`.
-
-The plugin is a kept-loaded panel, so the shell restart is needed once to mount it. On first load it adds `~/.local/share/applications/gotar.omarchy-themes.desktop` (never overwriting your own copy), which puts **Themes Gallery** in the app launcher. It can also be toggled directly:
+Alternative — manual clone, then `omarchy restart shell`:
 
 ```sh
-omarchy-shell shell toggle gotar.omarchy-themes '{}'
+git clone https://github.com/sumdahl/omarchy-themes-gallery.git ~/.config/omarchy/plugins/sumiran.theme-gallery
+```
+
+The plugin is a kept-loaded panel, so the shell restart is needed once to mount it. On first load it adds `~/.local/share/applications/sumiran.theme-gallery.desktop` (never overwriting your own copy), which puts **Themes Gallery** in the app launcher. It can also be toggled directly:
+
+```sh
+omarchy-shell shell toggle sumiran.theme-gallery '{}'
 ```
 
 Optionally add the 🖼️ bar button too (left-click opens the app, right-click opens Aether). Upgrading from 1.0.x keeps an existing bar button working:
 
 ```sh
-omarchy bar put gotar.omarchy-themes --after omarchy.weather
+omarchy bar put sumiran.theme-gallery --after omarchy.weather
 ```
 
 ## Requirements
@@ -64,32 +53,32 @@ No other runtime dependencies; the QML side uses only Quickshell + `qs.Commons`/
 ## Uninstall
 
 ```sh
-omarchy plugin remove gotar.omarchy-themes --yes
+omarchy plugin remove sumiran.theme-gallery --yes
 omarchy-shell shell rescanPlugins
 ```
 
-This disables the plugin and deletes `~/.config/omarchy/plugins/gotar.omarchy-themes/`. If the plugin was cloned manually instead, just remove the directory and rescan:
+This disables the plugin and deletes `~/.config/omarchy/plugins/sumiran.theme-gallery/`. If the plugin was cloned manually instead, just remove the directory and rescan:
 
 ```sh
-rm -rf ~/.config/omarchy/plugins/gotar.omarchy-themes
+rm -rf ~/.config/omarchy/plugins/sumiran.theme-gallery
 omarchy-shell shell rescanPlugins
 ```
 
-Delete `~/.local/share/applications/gotar.omarchy-themes.desktop` to drop the launcher entry.
+Delete `~/.local/share/applications/sumiran.theme-gallery.desktop` to drop the launcher entry.
 
-The applied themes (`~/.config/omarchy/themes/<slug>/`) are regular Omarchy user themes and stay installed — remove them with `omarchy theme remove <slug>` if you no longer want them. The wallpaper index cache in `~/.cache/gotar.omarchy-themes/` can be deleted (it is re-fetched on next open).
+The applied themes (`~/.config/omarchy/themes/<slug>/`) are regular Omarchy user themes and stay installed — remove them with `omarchy theme remove <slug>` if you no longer want them. The wallpaper index cache in `~/.cache/sumiran.theme-gallery/` can be deleted (it is re-fetched on next open).
 
 ## Update
 
 ```sh
-omarchy plugin update gotar.omarchy-themes --yes
+omarchy plugin update sumiran.theme-gallery --yes
 omarchy-shell shell rescanPlugins
 ```
 
 For a manual clone:
 
 ```sh
-cd ~/.config/omarchy/plugins/gotar.omarchy-themes && git pull
+cd ~/.config/omarchy/plugins/sumiran.theme-gallery && git pull
 omarchy-shell shell rescanPlugins
 ```
 
@@ -117,17 +106,17 @@ Hover + click everywhere: facets, cards, variant rows, breadcrumbs, search — w
 
 ## How it works
 
-- **Index**: first open runs `bin/fetch-manifest.py` → downloads ~35 MB `https://bjarneo.github.io/omarchy-themes/wallpapers.js` (`window.WALLPAPERS` + `WALLPAPERS_BASE_URL`), slims to ~7 MB JSON (`p/t/tone/color/tags/w/h/thumb/med/pal/th{5×{n,ct,bg,c[16]}}`) and caches to `~/.cache/gotar.omarchy-themes/manifest.json` (24 h TTL). Subsequent opens read cache instantly; if an automatic non-forced refresh fails while offline, the last valid (expired) index is used instead of a dead gallery. Explicit `R`/Retry remains strict and reports a failed forced refresh.
+- **Index**: first open runs `bin/fetch-manifest.py` → downloads ~35 MB `https://bjarneo.github.io/omarchy-themes/wallpapers.js` (`window.WALLPAPERS` + `WALLPAPERS_BASE_URL`), slims to ~7 MB JSON (`p/t/tone/color/tags/w/h/thumb/med/pal/th{5×{n,ct,bg,c[16]}}`) and caches to `~/.cache/sumiran.theme-gallery/manifest.json` (24 h TTL). Subsequent opens read cache instantly; if an automatic non-forced refresh fails while offline, the last valid (expired) index is used instead of a dead gallery. Explicit `R`/Retry remains strict and reports a failed forced refresh.
 - **Thumbnails / previews**: async `Image`s from the same bucket (`thumb_path`, `medium_path`, `p`). Grid thumbnails are cached and decoded at display size; the grid prebuilds rows and recycles delegates, and mouse-wheel scrolling is eased.
 - **Apply**: `bin/apply-theme.py <slug> <base> <ct> <bg> [fallbackP]` → `try_download(ct)` → `try_download(bg)` → fallback to `p` on 403 → write. Panel then applies the theme and confirms via `omarchy theme current` (the gallery shows a real failure, not a fire-and-forget "✓"). Current theme shown via `omarchy theme current` → `✓ Active` on the matching variant.
-- **Wallpaper cache**: downloaded wallpapers live in `~/.cache/gotar.omarchy-themes/wallpapers/` and are pruned to ~1 GiB / 300 files (oldest first, the currently-linked background is kept).
+- **Wallpaper cache**: downloaded wallpapers live in `~/.cache/sumiran.theme-gallery/wallpapers/` and are pruned to ~1 GiB / 300 files (oldest first, the currently-linked background is kept).
 
 No extra network beyond index + media.
 
 ## Layout
 
 ```
-manifest.json          id gotar.omarchy-themes, kinds panel + bar-widget, keepLoaded
+manifest.json          id sumiran.theme-gallery, kinds panel + bar-widget, keepLoaded
 BarWidget.qml          optional 🖼️ bar button: left = toggle app via shell.toggle, right = Aether
 Panel.qml              FloatingWindow app: header, search + Mode/Auto switches, filter rail, responsive GridView, detail, IpcHandler, auto Timer
 icon.svg / icon.png    launcher icon
@@ -141,6 +130,8 @@ bin/desktop-entry.py   installs the app-launcher entry once
 The window opens at `1180×800` (`Style.space`) and is resizable (min `760×540`): header → search + Mode/Auto → filter chips → rail + grid → status. The grid's right edge is anchored to the window (no width arithmetic), so added controls can never push thumbnails outside. All colors and fonts come from the shell's `Color`/`Style`, so the app follows `omarchy theme set` and `omarchy font set`.
 
 ## Credits & license
+
+- **Original plugin**: forked from [gotar/omarchy-themes](https://github.com/gotar/omarchy-themes) (`gotar.omarchy-themes` on [Omarchy Plugins](https://omarchyplugins.com/plugin.html?id=gotar.omarchy-themes)).
 
 - **Wallpapers & themes**: [bjarneo/omarchy-themes](https://github.com/bjarneo/omarchy-themes) & [bjarneo.github.io/omarchy-themes](https://bjarneo.github.io/omarchy-themes/) — all images and `colors.toml` / `background` mappings are theirs, served from `wallpapers.hel1.your-objectstorage.com` (Hetzner Object Storage, hel1). Thank you!
 - **Aether**: theme generator that produced the five variants per wallpaper.
