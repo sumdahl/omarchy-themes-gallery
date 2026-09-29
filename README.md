@@ -138,7 +138,7 @@ The window opens at `1180×800` (`Style.space`) and is resizable (min `760×540`
 - **Omarchy**: shell, `omarchy theme set/current`, `Style`/`Color`/`Border`, `PanelKeyCatcher`/`PanelToolTip` APIs.
 - **Quickshell**: `Quickshell.Io/Process` + `StdioCollector`.
 
-This plugin is **MIT** (see `LICENSE`). Wallpapers remain under their original licenses as provided by the upstream collection. This project is open-source, no telemetry, no tracking.
+This plugin is **MIT** (see `LICENSE`), © 2026 gotar (original author) and © 2026 Sumiran Dahal (fork changes). Wallpapers remain under their original licenses as provided by the upstream collection. This project is open-source, no telemetry, no tracking.
 
 ## Publish
 
